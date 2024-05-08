@@ -19,14 +19,16 @@ namespace ShopOnline.Api.Repositories
             return categories;
         }
 
-        public Task<ProductCategory> GetCategory(int id)
+        public async Task<ProductCategory> GetCategory(int id)
         {
-            throw new NotImplementedException();
+            var category = await this.shopOnlineDbContext.ProductCategories.SingleOrDefaultAsync(x => x.Id == id);
+            return category;
         }
 
-        public Task<Product> GetItem(int id)
+        public async Task<Product> GetItem(int id)
         {
-            throw new NotImplementedException();
+            var item = await this.shopOnlineDbContext.Products.FindAsync(id);
+            return item;
         }
 
         public async Task<IEnumerable<Product>> GetItems()

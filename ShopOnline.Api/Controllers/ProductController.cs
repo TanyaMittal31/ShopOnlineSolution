@@ -26,7 +26,7 @@ namespace ShopOnline.Api.Controllers
                 var categories = await this.productRepository.GetCategories();
 
 
-                if (products == null)
+                if (products == null || categories == null)
                 {
                     return NotFound();
                 }
@@ -35,6 +35,34 @@ namespace ShopOnline.Api.Controllers
                     var productDtos = products.ConvertToDto(categories);
 
                     return Ok(productDtos);
+                }
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                "Error retrieving data from the database");
+
+            }
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetItem(int id)
+        {
+            try
+            {
+                var product = await this.productRepository.GetItem(id);
+
+                if (product == null)
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    var productCategory = await this.productRepository.GetCategory(product.CategoryId);
+                    var productDto = product.ConvertToDto(productCategory);
+
+                    return Ok(productDto);
                 }
 
             }
